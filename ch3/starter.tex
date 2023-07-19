@@ -1,0 +1,81 @@
+\documentclass[12pt]{article}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{amsmath,amsthm,amsfonts,amssymb,fancyvrb}
+\usepackage{mathpartir}
+
+% Helpful macros
+\newcommand{\mt}[1]{\ensuremath{\text{#1}}}
+\newcommand{\isA}[2]{\ensuremath{#1 \; #2}}
+\newcommand{\isANat}[1]{\isA{#1}{\mt{nat}}}
+\newcommand{\zero}{\mt{zero}}
+\newcommand{\mySucc}[1]{\mt{succ}(#1)}
+
+
+%% Judgments
+
+
+\begin{document}
+
+TPL \hfill Chapter 3 Exercise\\
+Your Name
+
+\hrulefill
+
+\subsection*{Questions}
+
+\begin{enumerate}
+
+\item[3.2.4]
+\item[3.2.5]
+\item[3.5.10]
+\item[3.5.13]
+\item[3.5.16]
+\item[3.5.17]
+\item[3.5.18]
+
+
+\end{enumerate}
+
+\newpage
+
+\subsection*{Appendix}
+Here is an example latex typesetting of an inductive definition. You can copy/paste and modify this code. After finishing all the exercises, feel free to delete this section.
+
+\begin{mathpar}
+\inferrule{
+}{
+    \isANat{\zero}
+}
+
+\inferrule{
+    \isANat{n}
+}{
+    \isANat{\mySucc{n}}
+}
+\end{mathpar}
+
+You can nest \textbackslash inferrule* for derivation tree.
+For example:
+
+\begin{mathpar}
+\inferrule*{
+\inferrule*{
+  \text {empty tree} \text {empty tree}
+}{
+  \text {node}(\text {empty;empty}) \text{ tree}
+}
+\quad
+\text {empty tree}
+}
+{
+\text {node}( \text {node}(\text {empty;empty}); \text{empty}) \text{ tree}
+}
+\end{mathpar} 
+
+
+\end{document}
