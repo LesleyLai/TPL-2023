@@ -1,0 +1,44 @@
+\documentclass{article}
+
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage[cm]{fullpage}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{siunitx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{mathpartir}
+
+
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}
+\newtheorem{claim}{Claim}
+
+\newcommand{\set}[2]{\{#1\mid#2\}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\ee}{\mathbb{E}}
+\newcommand{\pp}{\mathbb{P}}
+\newcommand{\nn}{\mathbb{N}}
+
+\newcommand{\comment}[1]{\textcolor{red}{\textbf{Comment:} #1}}
+\newcommand{\ifthenelse}[3]{\mathtt{if}\,\,\mathtt{#1}\,\,\mathtt{then}\,\,\mathtt{#2}\,\,\mathtt{else}\,\,\mathtt{#3}}
+\newcommand{\term}[1]{\mathtt{#1}}
+\newcommand{\suc}[1]{\mathtt{succ}\,\,\mathtt{#1}}
+\newcommand{\pred}[1]{\mathtt{pred}\,\,\mathtt{#1}}
+\newcommand{\iszero}[1]{\mathtt{iszero}\,\,\mathtt{#1}}
+\newcommand{\true}{\mathtt{true}}
+\newcommand{\false}{\mathtt{false}}
+\newcommand{\wrong}{\mathtt{wrong}}
+\newcommand{\badnat}{\mathtt{badnat}}
+\newcommand{\badbool}{\mathtt{badbool}}
+\newcommand{\sstep}[2]{#1 \rightarrow #2}
+\newcommand{\mstep}[2]{#1 \rightarrow^* #2}
+
+\newcommand{\sarr}[2]{\rightarrow}
+\newcommand{\marr}{\rightarrow^*}
