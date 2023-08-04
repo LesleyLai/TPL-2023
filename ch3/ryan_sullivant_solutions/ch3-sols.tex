@@ -1,0 +1,337 @@
+\input{preamble}
+
+\titlespacing{\subsubsection}{0pt}{\parskip}{-\parskip}
+\titlespacing{\section}{0pt}{*4}{*1.5}
+
+\begin{document}
+
+\subsection*{Definition of Terms}
+Define the set of terms as 
+\begin{align*}
+    S_0 &= \emptyset \\
+    S_{i+1} &= \{\mathtt{true}, \mathtt{false}, 0\} 
+    \cup \set{\suc{t_1}, \pred{t_1}, \iszero{t_1}}{\mathtt{t_1} \in S_i} 
+    \cup \set{\ifthenelse{t_1}{t_2}{t_3}}{\mathtt{t_1}, \mathtt{t_2}, \mathtt{t_3} \in S_i} \\
+    S &= \bigcup_i S_i
+\end{align*}
+\subsubsection*{Exercise 3.2.4}
+How many elements does $S_3$ have?
+\newline
+\textbf{Solution:} $S_0 = \emptyset$, so $S_1 = \{\mathtt{true}, \mathtt{false}, 0\}$.  $S_2$ contains
+the atomic terms from $S_1$ and also the compound terms built from atomic terms. The functions \texttt{suc},
+\texttt{pred}, and \texttt{iszero} are all unary, so for each term $\mathtt{t}$ they produce a distinct
+term $\tau\,\, \mathtt{t}$ where $\tau$ is one of \texttt{succ}, \texttt{pred}, and \texttt{iszero}.  Each function produces $3$ terms from the atomic terms, so in total $3 \cdot 3$ terms are produced by the unary functions.
+
+The $\ifthenelse{t_1}{t_2}{t_3}$ function is ternary, and produces a distinct term for any choice of 
+three terms $\mathtt{t_1}, \mathtt{t_2}, \mathtt{t_3}$. 
+In the case of $S_2$ there are three choices (\texttt{true}, \texttt{false}, $0$) for each of
+$\mathtt{t_1}, \mathtt{t_2}, \mathtt{t_3}$, so $\ifthenelse{t_1}{t_2}{t_3}$ produces $3 \cdot 3 \cdot 3 = 27$ distinct terms.  
+
+In total, $S_2$ has $3 + 9 + 27 = 39$ terms.  Following the same approach, for $S_3$, the unary functions
+produce $39 \cdot 3 = 117$ terms, and the ternary function produces $39^3 = 59,319$ terms.  Combining with
+the three atomic terms gives $|S_3| = 3 + 117 + 59,319 = 59,439$.
+
+\subsubsection*{Exercise 3.2.5}
+Show that the sets $S_i$ are cumulative.
+\begin{proof} We will show this by induction on $i$ that $S_i \subseteq S_{i+1}$.
+\begin{description}
+    \item[Base case:] $S_0 = \emptyset$ so trivially $S_0 \subseteq S_1$.
+    \item[Inductive step:] Assume that we have shown that $S_{i-1} \subseteq S_i$.  We will show that
+        $S_i \subseteq S_{i+1}$.  Let $\mathtt{t} \in S_i$ be some term.  Then, either $\mathtt{t}$ is and
+        atomic term, or it is a compound term containing functions.  If $\mathtt{t}$ is atomic, then by 
+        construction, $\mathtt{t} \in S_{i+1}$.  So, suppose $\mathtt{t}$ is a term containing functions.
+        
+        If the outermost function of $\mathtt{t}$ is a unary function then $\mathtt{t} = \tau\,\, \mathtt{s}$ where $\tau$ is a unary function and $\mathtt{s} \in S_{i-1}$.  By the IH, $\mathtt{s} \in S_i$ 
+and it follows that $\mathtt{t} = \tau\,\, \mathtt{s} \in S_{i+1}$.
+
+If the outermost function of $\mathtt{t}$ is the ternary conditional function, then a completely analogous
+argument with $\mathtt{s}$ replaced by three terms $\mathtt{s_1}, \mathtt{s_2}, \mathtt{s_3}$ shows that
+$\mathtt{t} \in S_{i+1}$.
+\end{description}
+By induction, it follows that $S_i \subseteq S_{i+1}$ for all $i \in \nn$ which shows that the sets
+$S_i$ are cumulative.
+\end{proof}
+
+\subsubsection*{Exercise 3.3.4}
+Suppose $P$ is a predicate on terms.  Show that Structural Induction holds:\newline
+If, for each term $\term{s}$, given $P(\term{r})$ for all immediate subterms $\term{r}$ of $\term{s}$
+we can show $P(\term{s})$, then $P(\term{s})$ holds for all $\term{s}$.
+
+\begin{proof}
+    First, note that the relation $\prec$ defined on terms by 
+    \[ \term{r} \prec \term{s} \text{ iff } \term{r} \text{ is a subterm of } \term{s} \]
+    is well-founded.  This can be seen by considering the concrete definition of terms using the sets
+    $S_i$.  We showed in Exercise 3.2.5 that these sets are cumulative, and moreover by their definition,
+    it is easy to see that they are all finite.  Since any term $\term{t}$ appears in some set $S_i$,
+    it follows that any $\term{t}$ can only have finitely
+    many $\prec$-predecessors.  Hence, there are no infinite $\prec$-descending chains.
+
+    Now we can prove the desired statement by contradiction.  Suppose we have a predicate $P$ satisfying the
+    hypothesis of Structural Induction.  We will show that $P(\term{s})$ holds for all $\term{s}$.  Suppose
+    this was not the case, so for some term $\term{s}$, $P(\term{s})$ does not hold.  Using the 
+    well-foundedness of $\prec$ choose such an $\term{s}$ which is $\prec$-minimal.  That is, $P(\term{s})$ 
+    does not hold, but $P(\term{r})$ does hold for all terms $\term{r}$ such that $\term{r} \prec \term{s}$,
+    i.e. all subterms of $\term{s}$.  In particular, $P$ holds for all immediate subterms of $\term{s}$.
+    By our assumption that $P$ satisfies the hypothesis of structural induction, it follows that $P(\term{s})$ does hold. Contradiction. Hence, there are no terms $\term{s}$ such that $P(\term{s})$ does not hold.
+\end{proof}
+
+
+\subsubsection*{Exercise 3.5.5}
+Spell out the induction principle used in the proof of Theorem 3.5.4.\newline
+\textbf{Solution:} Suppose $P$ is a predicate evalaution statement derivations.  If $D$ is a derivation 
+and assuming $P(\overline{D})$ holds for all subderivations $\overline{D}$ of $D$ we can prove $P(D)$,
+then $P(D)$ holds for all derivations $D$.
+
+\subsubsection*{Exercise 3.5.10}
+Rephrase Definition 3.5.9 of the \emph{multi-step evaluation} relation $\rightarrow^*$ as a set of inference
+rules.\newline
+\textbf{Solution:} 
+\begin{mathpar}
+    \inferrule{\sstep{\term{t}}{\term{t'}}} {\mstep{\term{t}}{\term{t'}}}\quad \inferrule{}{\mstep{\term{t}}{\term{t}}} \quad \inferrule{\mstep{\term{t}}{\term{t'}} \text{ and } \mstep{\term{t'}}{\term{t''}}}{\mstep{\term{t}}{\term{t''}}}
+\end{mathpar}
+
+
+\subsubsection*{Exercise 3.5.13}
+\begin{enumerate}
+    \item[1.] Adding the rule
+        \[ \sstep{\ifthenelse{\true}{\term{t_2}}{\term{t_3}}}{\term{t_3}} \]
+        would make 
+        \begin{itemize}
+            \item Theorem 3.5.4 (Determinacy of one-step evalaution) fail since there are two posibilities
+                for transitioning with $\ifthenelse{\true}{\cdot}{\cdot}$.
+            \item Theorem 3.5.7 (every value is in normal form) will still hold
+            \item Theorem 3.5.8 (normal forms are values) will still hold
+            \item Theorem 3.5.11 (uniqueness of normal forms) will fail like Theorem 3.5.4
+        \end{itemize}
+    \item Adding the rule
+        \begin{mathpar}
+            \inferrule
+            {
+                \sstep{\term{t_2}}{\term{t_2'}}
+            }
+            {   \sstep
+                {\ifthenelse{\term{t_1}}{\term{t_2}}{\term{t_3}}}
+                {\ifthenelse{\term{t_1}}{\term{t_2'}}{\term{t_3}}}
+            }
+        \end{mathpar}
+        would make 
+        \begin{itemize}
+            \item Theorem 3.5.4 (Determinacy of one-step evalaution) fail since there are two posibilities
+                for transitioning with $\ifthenelse{\term{t1}}{\term{t2}}{\cdot}$.
+            \item Theorem 3.5.7 (every value is in normal form) will still hold
+            \item Theorem 3.5.8 (normal forms are values) will still hold
+            \item Theorem 3.5.11 (uniqueness of normal forms) will still hold.  Suppose that
+                $\mstep{\ifthenelse{\term{t_1}}{\term{t_2}}{\term{t_3}}}{\term{v}}$ where $\mstep{\term{t_2}}{\term{v}}$. 
+                In the original semantics, this would only be possible by first evaluating 
+                $\mstep{\term{t_1}}{\true}$ producing $\term{t_2}$ then evaluating 
+                $\mstep{\term{t_2}}{\term{v}}$.  With the new rule, it is possible that some steps of 
+                the evalaution $\mstep{\term{t_2}}{\term{v}}$ are interleaved with the evaluation 
+                of $\mstep{\term{t_1}}{\true}$. Intuitively, this reorganization will not change the 
+                resulting value, but a complete proof of this would require proving the diamond property.
+                See the book for a full argument.
+        \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Exercise 3.5.14}
+Proof Theorem 3.5.4 on arithmetic expressions: if $\sstep{\term{t}}{\term{t'}}$ and $\sstep{\term{t}}{\term{t''}}$ then $\term{t'} = \term{t''}$.
+\begin{proof}
+    By induction on the derivation of $\sstep{\term{t}}{\term{t'}}$.  If the last rule in the derivation
+    is E-SUCC, then $\term{t}$ has the form $\suc{\term{t_1}}$ and $\sstep{\term{t_1}}{\term{t_1'}}$.
+    It follows that the only rule
+    that can apply to $\term{t}$ is E-SUCC, so the last rule of the derivation of 
+    $\sstep{\term{t}}{\term{t''}}$ is E-SUCC as well and $\sstep{\term{t_1}}{\term{t_1''}}$.
+    By the IH, $\term{t_1'} = \term{t_1''}$, and it follows that $\term{t'} = \term{t''}$.
+
+    Now, suppose the last rule of the derivation is E-PRED.  So, $\term{t}$ has the form
+    $\pred{\term{t_1}}$ and $\sstep{\term{t_1}}{\term{t_1'}}$.  Note that the rules E-PREDZERO
+    and E-PREDSUCC cannot apply to $\term{t}$ because $\term{t_1}$ is not a value.  It follows
+    that the last rule applied in the derivation of $\sstep{\term{t}}{\term{t''}}$ must be 
+    E-PRED and $\sstep{\term{t_1}}{\term{t_1'}}$.  
+    By the IH, $\term{t_1'} = \term{t_1''}$, and it follows that $\term{t'} = \term{t''}$.
+
+    The argument if the last rule of the derivation is E-ISZERO follow in a completely analogous manner,
+    except that we need to rule out the possibilites the possibilities of E-ISZEROZERO and
+    E-ISZEROSUCC instead of E-PREDZERO and E-PREDSUCC.
+
+    The arguments for the remaining rules are even simpler.  For example, suppose the final rule 
+    used in the derivation is E-PREDZERO.  Then, $\term{t}$ is  $\pred{0}$ and trivially, 
+    $\term{t'} = 0 = \term{t''}$. Similarly, if the final rule is E-ISZEROZERO we can show
+    that $\term{t'} = \true = \term{t''}$.  Analogous reasoning works for E-PREDSUCC and E-ISZEROSUCC.
+    In the case of E-PREDSUCC we show that $\term{t'} = \term{nv1} = \term{t''}$ and in the case of
+    E-ISZEROSUCC we show that $\term{t'} = \false = \term{t''}$.
+\end{proof}
+
+\subsubsection*{Exercise 3.5.16}
+Show that the two treatments of runtime errors agree.
+\begin{claim}
+    Let $\term{t}$ be a term in the original syntax and let $\sarr_1, \marr_1$ 
+    denote the transition relations for the original
+    semantics and $\sarr_2, \marr_2$ denote the transition relation for the augmented semantics.  
+    Then, $\term{t} \marr_1 \term{t'}$ where $\term{t'}$ is stuck iff $\term{t} \marr_2 \wrong$.
+\end{claim}
+
+\begin{lem}\label{lem:samesteps}
+    If $\term{t} \marr_1 \term{t'}$ then $\term{t} \marr_2 \term{t'}$ and follows the same steps.
+\end{lem}
+\begin{proof} If $\term{t'}$ can be transitioned to from $\term{t}$, then $\badnat$ or $\badbool$
+    could never appear in a term that would allow one of the WRONG evaluations to apply.  Hence,
+    the transition $\term{t} \marr_2 \term{t'}$ would follow exactly the same steps as 
+    $\term{t} \marr_1 \term{t'}$.
+\end{proof}
+
+\begin{lem}
+    If $\term{t}$ is stuck in the original semantics then $\term{t} \marr_2 \wrong$.
+\end{lem}
+\begin{proof} Suppose $\term{t}$ is stuck.  We show this by induction on the structure of $\term{t}$.
+    There are a few cases to consider.
+    \begin{description}
+        \item[$\term{t}$ is of the form $\pred{\term{t_1}}$]
+            If $\term{t_1}$ is not a value, then $\pred{\term{t_1}}$ is stuck iff $\term{t_1}$ is stuck.
+            By the IH, $\term{t_1} \marr_2 \wrong$, so $\term{t} \marr_2 \wrong$ via E-PRED-WRONG.
+            If $\term{t_1}$ is a value $\term{v}$, then
+            since $\term{t}$ is stuck $\term{v}$ must not be a numeric value.  Hence, $\term{v}$ is 
+            $\true$ or $\false$.  Thus, $\term{v}$ is a $\badnat$ and using E-PRED-WRONG
+            $\term{t} \marr_2 \wrong$.
+        \item[$\term{t}$ is of the form $\iszero{\term{t_1}}$]
+            By the same reasoning as the previous case, 
+            $\term{t} \marr_2 \wrong$ using E-ISZERO-WRONG.
+        \item[$\term{t}$ is of the form $\suc{\term{t_1}}$]
+            Similar to the previous cases, but we need not consider the case when $\term{t_1}$ is a value.
+        \item[$\term{t}$ is of the form $\ifthenelse{\term{t_1}}{\term{t_2}}{\term{t_3}}$]
+            If $\term{t_1}$ is not a value, then $\ifthenelse{\term{t_1}}{\term{t_2}}{\term{t_3}}$
+            is stuck iff $\term{t_1}$ is stuck.  
+            By the IH, $\term{t_1} \marr_2 \wrong$, so $\term{t} \marr_2 \wrong$ via E-IF-WRONG.
+            If $\term{t_1}$ is a value $\term{v}$, then 
+            since $\term{t}$ is stuck $\term{v}$ must be a numeric value.  Hence, $\term{v}$ is 
+            a $\badbool$ and using E-IF-WRONG $\term{t} \marr_2 \wrong$.
+    \end{description}
+\end{proof}
+
+The two previous lemmas show that if $\term{t} \marr_1 \term{t'}$ where $\term{t'}$ is stuck,
+then $\term{t} \marr_2 \wrong$.  For the reverse direction, we show
+
+\begin{lem} Suppose $\term{t} \marr_1 \term{t'}$ and $\term{t'} \sarr_2 \term{t''}$ where $\term{t''}$
+    has $\wrong$ as a subterm, then $\term{t'}$ is stuck.
+\end{lem}
+\begin{proof} By induction on a derivation of $\term{t'} \sarr_2 \term{t''}$.
+    Suppose that the final rule in the derivation is E-IF-WRONG. Then, $\term{t'}$ has the form
+    $\ifthenelse{\badbool}{\term{t_2}}{\term{t_3}}$.  Because $\term{t'}$ was obtained through evaluation
+    in the original semantics, it follows that $\badbool$ is a numeric value $\term{nv}$ and not $\wrong$.
+    Hence, $\term{t'}$ is stuck.
+    We can argue similarly if the final rule is E-SUCC-WRONG, E-PRED-WRONG, or E-ISZERO-WRONG.  
+
+    If the final rule in the derivation is E-PRED, then $\term{t'}$ is of the form
+    $\pred{\term{t_1}}$ and $\term{t_1} \sarr_2 \term{t_1'}$.  By our assumption that $\term{t''}$
+    has $\wrong$ as a subterm it follows that the evaluation $\term{t_1} \sarr_2 \term{t_1'}$ must use
+    one of the $\wrong$ producing rules E-IF-WRONG, E-SUCC-WRONG, E-PRED-WRONG, E-ISZERO-WRONG.  From the 
+    induction hypothesis, we get that $\term{t_1}$ is stuck which implies that 
+    $\term{t'} = \pred{\term{t_1}}$ is stuck.  We can argue in a similar manner if the final rule in
+    the derivation is E-SUCC, E-ISZERO, or E-IF.
+
+    The remaining numeric expression produce values, so could not be the final rule in the derivation.
+    The rules E-IFTRUE and E-IFFALSE extract a subterm from $\term{t'}$, so they could not have $\wrong$
+    as a subterm since the derivation $\term{t} \marr_1 \term{t'}$ happens in the original semantics.
+    Hence, they could not be the final rule of the derivation either.
+\end{proof}
+
+Combining the previous lemma and Lemma \ref{lem:samesteps}, we can prove the reverse direction.
+Suppose that $\term{t} \marr_2 \wrong$.  By Lemma \ref{lem:samesteps} an initial segment of the 
+multi-step evaluation is done purely in the original semantics.  Let $\term{t'}$ be the final term produced
+using the original evaluation rules.  It follows that the next term in the evaluation of 
+$\term{t} \marr_2 \wrong$ must have $\wrong$ as a subterm, so using the previous lemma, 
+$\term{t'}$ is stuck.
+
+
+\subsubsection*{Exercise 3.5.17}
+Show that the small-step and big-step semantics agree, i.e. $\term{t} \marr \term{v}$ iff 
+$\term{t} \Downarrow \term{v}$.
+
+\begin{proof} We show this by induction on the structure of $\term{t}$.
+    \begin{description}
+    \item[$\term{t}$ is a value] Trivially, $\term{t} \marr \term{v}$ iff $\term{t} \Downarrow \term{v}$.
+    \item[$\term{t}$ is $\ifthenelse{\term{t_1}}{\term{t_2}}{\term{t_3}}$:] By the induction hypothesis,
+        $\term{t_i} \marr \term{v}$ iff $\term{t_i} \Downarrow \term{v}$ for $i = 1, 2, 3$.
+        For the forward direction, assume that $\term{t} \marr \term{v}$.  Necessarily,
+        $\term{t_i} \marr \term{v_i}$ for $i = 1, 2, 3$.  Consider the following evaluation of
+        $\term{t}$.  First, use the evaluation $\term{t_1} \marr \term{v_1}$ and E-IF to obtain 
+        $\term{t} \marr \ifthenelse{\term{v_1}}{\term{t_2}}{\term{t_3}}$.  If $\term{v_1} = \true$ we 
+        next apply E-IFTRUE to obtain $\term{t_2}$ and proceed with $\term{t_2} \marr \term{v_2}$ to obtain
+        $\term{t} \marr \term{v_2}$.  Otherwise, $\term{v_1} = \false$ and we use E-IFFALSE and 
+        $\term{t_3} \marr \term{v_3}$ to obtain $\term{t} \marr {\term{v_3}}$.
+        By the uniqueness of normal forms (Theorem 3.5.11), this proposed evaluation is valid and
+        results in the correct value. Suppose the former case $\term{t_1} \marr \true$ holds.  Then, 
+        by the IH, $\term{t_1} \Downarrow \true$ and $\term{t_2} \Downarrow \term{v_2}$, so
+        B-IFTRUE gives $\term{t} \Downarrow \term{v_2}$.  In the latter case $\term{t_1} \marr \false$,
+        and B-IFFALSE gives $\term{t} \Downarrow \term{v_3}$.
+
+        For the reverse direction, assume that $\term{t} \Downarrow \term{v}$.  So, either B-IFTRUE or
+        B-IFFALSE were used to evaluate $\term{t}$.  If B-IFTRUE was used, then 
+        $\term{t_1} \Downarrow \true$, $\term{t_2} \Downarrow \term{v_2}$, and 
+        $\term{t} \Downarrow \term{v_2}$ for some $\term{v_2}$.  
+        By the induction hypothesis, $\term{t_1} \marr \true$ and
+        $\term{t_2} \marr \term{v_2}$.  We can again appeal to the uniqueness of normal forms theorem
+        to construct a valid evaluation of $\term{t} \marr \term{v_2}$ following the same approach as 
+        above. If B-IFFALSE was used, then
+        $\term{t_3} \Downarrow \term{v_3}$ for some $\term{v_3}$
+        so that $\term{t} \Downarrow \term{v_3}$, and we again
+        construct a valid evaluation producing giving $\term{t} \marr \term{v_3}$.
+    \item[$\term{t}$ is $\pred{t_1}$:] By the induction hypothesis,
+        $\term{t_i} \marr \term{v}$ iff $\term{t_i} \Downarrow \term{v}$ for $i = 1, 2, 3$.
+        For the forward direction, assume that $\term{t} \marr \term{v}$.  Hence, 
+        $\term{t_1} \marr \term{v_1}$ for some value $\term{v_1}$.  Following the approach for
+        if-then-else term, we will construct a valid evaluation of $\term{t}$.  If $\term{v_1} = 0$,
+        then we can evaluate $\term{t}$ by first using $\term{t_1} \marr 0$ and E-PRED to obtain
+        $\term{t} \marr \pred{0}$.  Then, we can apply E-PREDZERO to obtain $\term{t} \marr 0$.
+        On the other hand, if $\term{v_1} = \suc{\term{nv}}$, then we would use E-PREDSUCC in the final
+        step to obtain $\term{t} \marr \term{nv}$.  In the former case, the induction hypothesis gives
+        $\term{t_1} \Downarrow 0$ so applying B-PREDZERO to $\term{t}$ gives $\term{t} \Downarrow 0$.
+        In the later case, the induction hypothesis gives $\term{t_1} \Downarrow \suc{\term{nv}}$ and
+        applying B-PREDSUCC gives $\term{t} \Downarrow \term{nv}$ as required.
+
+        For the reverse direction, assume that $\term{t} \Downarrow \term{v}$.  
+        If B-PREDZERO is applied then $\term{t_1} \Downarrow 0$ so by the IH, $\term{t_1} \marr 0$.
+        Hence, we can obtain $\term{t} \marr 0$ using E-PRED with $\term{t_1} \marr 0$ and applying
+        E-PREDZERO in the final step.  If B-PREDSUCC is applied then $\term{t_1} \Downarrow \term{nv}$
+        and $\term{t_1} \marr \term{nv}$ by the IH.  As in the B-PREDZERO case, we can use this
+        to obtain $\term{t} \marr \term{nv}$.
+
+    \item[$\term{t}$ is $\suc{\term{t_1}}$ or $\iszero{\term{t_1}}$:]
+        Similar to the $\term{pred}$ case.
+\end{description}
+\end{proof}
+
+\subsubsection*{Exercise 3.5.18}
+Give evaluation rules so that the $\term{then}$ and $\term{else}$ branches of an $\term{if}$ expression
+are evaluated before the guard is evaluated.\newline
+\textbf{Solution:} Remove E-IFTRUE, E-IFFALSE, and E-IF and replace with
+\begin{mathpar}
+    \inferrule{}{
+    \sstep{\ifthenelse{\true}{\term{v_2}}{\term{v_3}}}{\term{v_2}}
+    }
+
+    \inferrule{}{
+    \sstep{\ifthenelse{\false}{\term{v_2}}{\term{v_3}}}{\term{v_3}}}
+
+    \inferrule{
+        \sstep{\term{t_2}}{\term{t_2'}}
+    }{
+    \sstep{\ifthenelse{\term{t_1}}{\term{t_2}}{\term{t_3}}}
+        {\ifthenelse{\term{t_1}}{\term{t_2'}}{\term{t_3}}}
+    }
+
+    \inferrule{
+        \sstep{\term{t_3}}{\term{t_3'}}
+    }{
+    \sstep{\ifthenelse{\term{t_1}}{\term{v_2}}{\term{t_3}}}
+        {\ifthenelse{\term{t_1}}{\term{v_2}}{\term{t_3'}}}
+    }
+
+    \inferrule{
+        \sstep{\term{t_1}}{\term{t_1'}}
+    }{
+    \sstep{\ifthenelse{\term{t_1}}{\term{v_2}}{\term{v_3}}}
+            {\ifthenelse{\term{t_1'}}{\term{v_2}}{\term{v_3}}} 
+    }
+\end{mathpar}
+
+\end{document}
