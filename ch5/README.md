@@ -27,7 +27,7 @@ Looking forward to seeing everyone's solutions!
 ## Exercises
 For chapter 5
 - 5.2.1, 5.2.4, 5.2.7, 5.2.8, 5.2.11
-- 5.3.6, 5.3.8
+- 5.3.8
 
 ## Links mentioned during the meeting
 - [It's Time for a New Old Language](https://www.youtube.com/watch?v=dCuZkaaou0Q)

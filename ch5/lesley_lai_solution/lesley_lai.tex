@@ -10,11 +10,9 @@
 
 % Helpful macros
 \newcommand{\mt}[1]{\ensuremath{\text{#1}}}
-\newcommand{\isA}[2]{\ensuremath{#1 \; #2}}
-\newcommand{\isANat}[1]{\isA{#1}{\mt{nat}}}
-\newcommand{\zero}{\mt{zero}}
-\newcommand{\mySucc}[1]{\mt{succ}(#1)}
-
+\newcommand{\tru}{\mt{tru}}
+\newcommand{\fls}{\mt{fls}}
+\newcommand{\abstr}[1]{\lambda #1.\ }
 
 %% Judgments
 
@@ -22,7 +20,7 @@
 \begin{document}
 
 TPL \hfill Chapter 5 Exercise\\
-Your Name
+Lesley Lai
 
 \hrulefill
 
@@ -32,64 +30,69 @@ Your Name
 
 \item[5.2.1] Define logical \texttt{or} and \texttt{not} functions
 
+\begin{align*}
+\mt{or} &= \abstr{b} \abstr{c} b \ \tru \ c; \\
+\mt{not} &= \abstr{b} \abstr{t} \abstr{f} b \ f \ t ;
+\end{align*}
+
+Tests:
+\begin{align*}
+\mt{or} \ \tru \ \tru &= \tru \ \tru \ \tru = \tru \\
+\mt{or} \ \fls \ \tru &= \fls \ \tru \ \tru = \tru \\
+\mt{or} \ \tru \ \fls &= \tru \ \tru \ \fls = \tru \\
+\mt{or} \ \fls \ \fls &= \fls \ \tru \ \fls = \fls \\
+\mt{not} \ \tru &= \abstr{t}\abstr{f} \tru \ f \ t \\
+&= \abstr{t} \abstr{f} f \\ &= \fls \\
+\mt{not} \ \fls &= \abstr{t}\abstr{f} \fls \ f \ t \\
+&= \abstr{t} \abstr{f} t \\ &= \tru
+\end{align*}
+
+\newpage
+
 \item[5.2.4] Define a term for raising one number to the
 power of another.
+
+$$
+\mt{power} = \abstr{m}\abstr{n} m\ (\mt{times}\ n)\ c_0;
+$$
 
 \item[5.2.7] Write a function \texttt{equal} that tests two numbers for equality and returns a Church boolean. For example,
 
 \begin{align*}
-& \text { equal } \ c_3 \ c_3 ; \\
->\ & (\lambda t . \ \lambda f . \ t) \\
-& \text { equal } \ c_3 \ c_2 ; \\
->\ & (\lambda t . \ \lambda f . \ f)
+& \mt{ equal } \ c_3 \ c_3 ; \\
+>\ & (\abstr{t} \abstr{f} t) \\
+& \mt { equal } \ c_3 \ c_2 ; \\
+>\ & (\abstr{t} \abstr{f} f)
 \end{align*}
+
+Answer:
+$$
+\mt{equal} = \abstr{c_1}\abstr{c_2} \mt{and} \ (\mt{iszro} (m \ \mt{prd} \ n)) \ (\mt{iszro} (n \ \mt{prd} \ m));
+$$
 
 \item[5.2.8]
 
 A list can be represented in the lambda calculus by its \texttt{fold} function. (OCaml's name for this function is \texttt{fold\_left}; it is also sometimes called \texttt{reduce}.) For example, the list \texttt{[x,y,z]} becomes a function that takes two arguments \texttt{c} and \texttt{n} and returns \texttt{c x (c y (c z n)))}. What would the representation of \texttt{nil} be? Write a function \texttt{cons} that takes an element \texttt{h} and a list (that is, a \texttt{fold} function) \texttt{t} and returns a similar representation of the list formed by prepending \texttt{h} to \texttt{t}. Write \texttt{isnil} and \texttt{head} functions, each taking a list parameter. Finally, write a \texttt{tail} function for this representation of lists (this is quite a bit harder and requires a trick analogous to the one used to define \texttt{prd} for numbers).
 
+TODO
+
 \item[5.2.11] Use \texttt{fix} and the encoding of lists from Exercise 5.2.8 to write a function that sums lists of Church numerals
+
+TODO
 
 \item[5.3.8] Exercise 4.2.2 introduced a ``big-step" style of evaluation for
 arithmetic expressions, where the basic evaluation relation is ``term \texttt{t} evaluates to final result \texttt{v}." Show how to formulate the evaluation rules for lambda-terms in the big-step style.
 
+$$
+\inferrule{
+  \mt{t}_1 \Downarrow (\abstr{\mt{x}} \mt{t}_{12}) \quad \mt{t}_2 \Downarrow \mt{v}_2
+}{ t_1 \ t_2 \Downarrow \mt{t}_{12}[\mt{v}_2/\mt{x}]
+}
+$$
+
 \end{enumerate}
 
 \newpage
-
-\subsection*{Appendix}
-Here is an example latex typesetting of an inductive definition. You can copy/paste and modify this code. After finishing all the exercises, feel free to delete this section.
-
-\begin{mathpar}
-\inferrule{
-}{
-    \isANat{\zero}
-}
-
-\inferrule{
-    \isANat{n}
-}{
-    \isANat{\mySucc{n}}
-}
-\end{mathpar}
-
-You can nest \textbackslash inferrule* for derivation tree.
-For example:
-
-\begin{mathpar}
-\inferrule*{
-\inferrule*{
-  \text {empty tree} \text {empty tree}
-}{
-  \text {node}(\text {empty;empty}) \text{ tree}
-}
-\quad
-\text {empty tree}
-}
-{
-\text {node}( \text {node}(\text {empty;empty}); \text{empty}) \text{ tree}
-}
-\end{mathpar} 
 
 
 \end{document}
