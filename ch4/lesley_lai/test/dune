@@ -1,0 +1,3 @@
+(test
+ (name Arithmetic)
+ (libraries Arithmetic base alcotest))
