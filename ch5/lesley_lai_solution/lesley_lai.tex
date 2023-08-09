@@ -21,6 +21,9 @@
 \newcommand{\fst}{\mt{\texttt{fst}}}
 \newcommand{\snd}{\mt{\texttt{snd}}}
 \newcommand{\pair}{\mt{\texttt{pair}}}
+\newcommand{\plus}{\mt{\texttt{plus}}}
+\newcommand{\fix}{\mt{\texttt{fix}}}
+\newcommand{\realbool}{\mt{\texttt{realbool}}}
 
 \begin{document}
 
@@ -97,7 +100,16 @@ A list can be represented in the lambda calculus by its \texttt{fold} function. 
 
 \item[5.2.11] Use \texttt{fix} and the encoding of lists from Exercise 5.2.8 to write a function that sums lists of Church numerals
 
-TODO
+\begin{align*}
+\mt{sum\_impl} &= \abstr{\mt{fct}} \abstr{l} \\ 
+&\qquad \texttt{if} \ \realbool \ (\isnil \ l) \ \texttt{then} \\
+&\qquad\quad c_0 \\
+&\qquad \texttt{else} \\
+&\qquad\quad \plus \ \mt{fct} \ (\tail \ l) \\
+\mt{sum} &= \fix \ \mt{sum\_impl}
+\end{align*}
+
+\newpage
 
 \item[5.3.8] Exercise 4.2.2 introduced a ``big-step" style of evaluation for
 arithmetic expressions, where the basic evaluation relation is ``term \texttt{t} evaluates to final result \texttt{v}." Show how to formulate the evaluation rules for lambda-terms in the big-step style.
